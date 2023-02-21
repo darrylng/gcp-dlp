@@ -1,0 +1,16 @@
+bq_project: my-project-id
+bq_dataset: my-dataset
+bq_table: my-table
+bq_columns:
+  - name
+  - email
+custom_inspection_template_name: my-custom-inspection-template
+custom_info_types:
+  - info_type:
+      display_name: Email Address
+      description: An email address
+      regex: '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+  - info_type:
+      display_name: Phone Number
+      description: A phone number
+      regex: '\b\d{3}[-.]?\d{3}[-.]?\d{4}\b'

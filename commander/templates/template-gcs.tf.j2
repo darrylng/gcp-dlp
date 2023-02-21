@@ -1,0 +1,74 @@
+resource "google_data_loss_prevention_inspect_template" "{template_name}" {{
+  display_name = "{template_name}"
+  description = "{template_description}"
+  inspect_config {{
+    custom_info_types {{
+      info_type {{
+        name = "{info_type_name}"
+      }}
+      likelihood = "{min_likelihood}"
+    }}
+    limits {{
+      max_findings_per_request = {max_findings_per_request}
+    }}
+    storage_config {{
+      cloud_storage_options {{
+        file_set {{
+          url = "gs://{bucket_name}/{file_path_prefix}"
+        }}
+      }}
+    }}
+  }}
+}}
+
+resource "google_data_loss_prevention_stored_info_type" "{stored_info_type_name}" {{
+  display_name = "{stored_info_type_name}"
+  description = "{stored_info_type_description}"
+  version = "1"
+  config {{
+    dictionary {{
+      word_list {{
+        words = {dictionary_words}
+      }}
+    }}
+  }}
+}}
+
+resource "google_data_loss_prevention_job_trigger" "{trigger_name}" {{
+  display_name = "{trigger_description}"
+  inspect_job {{
+    storage_config {{
+      cloud_storage_options {{
+        file_set {{
+          url = "gs://{bucket_name}/{file_path_prefix}"
+        }}
+      }}
+      datastore_options {{
+        partition_id {{
+          namespace_id = "{datastore_namespace}"
+        }}
+        kind = "{datastore_kind}"
+      }}
+    }}
+    inspect_template_name = google_data_loss_prevention_inspect_template.{template_name}.name
+  }}
+  actions {{
+    save_findings {{
+      output_config {{
+        table {{
+          project_id = "{output_project_id}"
+          dataset_id = "{output_dataset_id}"
+          table_id = "{output_table_id}"
+        }}
+      }}
+    }}
+  }}
+  triggers {{
+    schedule {{
+      frequency = "{frequency_minutes}m"
+    }}
+    manual {{
+    }}
+  }}
+  pubsub_publish_topic = "projects/{pubsub_project}/topics/{pubsub_topic}"
+}}

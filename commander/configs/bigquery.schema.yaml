@@ -1,0 +1,21 @@
+# The ID of the BigQuery project to be scanned
+bq_project: string
+# The ID of the BigQuery dataset to be scanned
+bq_dataset: string
+# The ID of the BigQuery table to be scanned
+bq_table: string
+# A list of the columns in the BigQuery table to be scanned
+bq_columns:
+  - string
+  - ...
+# The name of the custom inspection template to be used for the scan
+custom_inspection_template_name: string
+# A list of custom info types to be used for the scan
+custom_info_types:
+  - info_type:
+      # The display name of the custom info type
+      display_name: string
+      # The description of the custom info type
+      description: string
+      # The regular expression pattern used to detect the custom info type
+      regex: string

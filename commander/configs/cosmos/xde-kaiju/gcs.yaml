@@ -1,0 +1,13 @@
+bucket_name: my-bucket
+include_regex: ".*\\.txt"
+exclude_regex: ".*\\.log"
+custom_inspection_template_name: my-custom-inspection-template
+custom_info_types:
+  - info_type:
+      display_name: Credit Card Number
+      description: A credit card number
+      regex: '\d{4}-?\d{4}-?\d{4}-?\d{4}'
+  - info_type:
+      display_name: ANZ PAN Value
+      description: ANZ PAN value
+      regex: '\d{24}'

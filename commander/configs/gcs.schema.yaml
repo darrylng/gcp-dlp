@@ -1,0 +1,17 @@
+# The name of the GCS bucket to be scanned
+bucket_name: string
+# The regular expression used to include objects in the scan
+include_regex: string
+# The regular expression used to exclude objects from the scan
+exclude_regex: string
+# The name of the custom inspection template to be used for the scan
+custom_inspection_template_name: string
+# A list of custom info types to be used for the scan
+custom_info_types:
+  - info_type:
+      # The display name of the custom info type
+      display_name: string
+      # The description of the custom info type
+      description: string
+      # The regular expression pattern used to detect the custom info type
+      regex: string

@@ -1,0 +1,83 @@
+resource "google_data_loss_prevention_inspect_template" "template" {{
+  display_name = "{config['template_name']}"
+  description = "{config['template_description']}"
+
+  inspection_config {{
+    info_types {{
+      name = "{config['info_type_name']}"
+    }}
+    min_likelihood = "{config['min_likelihood']}"
+    limits {{
+      max_findings_per_request = {config['max_findings_per_request']}
+    }}
+  }}
+}}
+
+resource "google_data_loss_prevention_stored_info_type" "stored_info_type" {{
+  display_name = "{config['stored_info_type_name']}"
+  description = "{config['stored_info_type_description']}"
+
+  stored_info_type_config {{
+    dictionary {{
+      word_list {{
+        words = {config['dictionary_words']}
+      }}
+    }}
+  }}
+}}
+
+resource "google_data_loss_prevention_job_trigger" "bigquery_trigger" {{
+  display_name = "{config['trigger_name']}"
+  description = "{config['trigger_description']}"
+
+  inspect_job {{
+    storage_config {{
+      big_query_options {{
+        table_reference {{
+          project_id = "{config['bigquery']['project_id']}"
+          dataset_id = "{config['bigquery']['dataset_id']}"
+          table_id = "{config['bigquery']['table_id']}"
+        }}
+        identifying_fields {{
+          column_name = [{columns}]
+        }}
+      }}
+    }}
+    inspect_template_name = google_data_loss_prevention_inspect_template.template.name
+    scheduling {{
+      frequency {{
+        minutes = {config['frequency_minutes']}
+      }}
+    }}
+  }}
+
+  triggers {{
+    big_query_triggers {{
+      inspect_config {{
+        info_types {{
+          name = "{config['info_type_name']}"
+        }}
+        limits {{
+          max_findings_per_request = {config['max_findings_per_request']}
+        }}
+      }}
+      when_to_trigger {{
+        match {{}}
+      }}
+    }}
+  }}
+
+  errors_config {{
+    pubsub_topic = "{config['pubsub_topic']}"
+    datastore_options {{
+      datastore_kind = "{config['datastore_kind']}"
+    }}
+  }}
+
+  pubsub_secret {{
+    project = "{config['pubsub_project']}"
+    topic = "{config['pubsub_topic']}"
+  }}
+
+  status = "HEALTHY"
+}}
